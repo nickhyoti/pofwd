@@ -315,6 +315,7 @@ func StartForwardingPacket(fromProtocol, fromAddress, toProtocol, toAddress stri
 							for {
 								_, err = io.ReadFull(connOut, buffer[:2])
 								if err != nil {
+									connOut.Close()
 									break
 								}
 								packetLen = (int(buffer[0]) << 8) | int(buffer[1])
@@ -326,6 +327,7 @@ func StartForwardingPacket(fromProtocol, fromAddress, toProtocol, toAddress stri
 								}
 								_, err = io.ReadFull(connOut, buffer[2:2+packetLen])
 								if err != nil {
+									connOut.Close()
 									break
 								}
 								_, err = connIn.WriteTo(buffer[2:2+packetLen], addrIn)
